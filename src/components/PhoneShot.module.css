@@ -1,0 +1,17 @@
+.frame {
+  position: relative;
+  width: 100%;
+  border-radius: clamp(26px, 9%, 40px);
+  padding: 6px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.04) 40%, rgba(255, 255, 255, 0.08));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    var(--shadow-lg);
+}
+
+.img {
+  width: 100%;
+  height: auto;
+  border-radius: calc(clamp(26px, 9%, 40px) - 6px);
+  background: var(--bg-3);
+}

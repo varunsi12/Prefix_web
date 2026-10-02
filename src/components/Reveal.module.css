@@ -1,0 +1,16 @@
+/* Only hide when JS is running (html.js is added in main.tsx) and motion is allowed,
+   so prerendered HTML and reduced-motion users always see content. */
+@media (prefers-reduced-motion: no-preference) {
+  :global(html.js) .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 800ms ease var(--delay, 0ms),
+      transform 900ms var(--ease-out) var(--delay, 0ms);
+  }
+
+  :global(html.js) .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+}

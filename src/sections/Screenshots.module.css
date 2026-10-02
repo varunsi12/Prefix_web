@@ -1,0 +1,85 @@
+.section {
+  padding: var(--section-y) 0;
+  overflow: hidden;
+}
+
+/* Mobile: horizontal snap rail. Desktop: four-up grid with a gentle stagger. */
+.rail {
+  margin-top: var(--space-7);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rail::-webkit-scrollbar {
+  display: none;
+}
+
+.rail:focus-visible {
+  box-shadow: inset var(--focus-ring);
+  border-radius: 0;
+}
+
+.track {
+  display: flex;
+  gap: var(--space-5);
+  padding-bottom: var(--space-2);
+}
+
+.frame {
+  flex: 0 0 68vw;
+  max-width: 300px;
+  scroll-snap-align: center;
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+}
+
+.caption {
+  display: grid;
+  gap: 0.2rem;
+  padding-inline: var(--space-2);
+}
+
+.caption strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-md);
+  color: var(--ink);
+}
+
+.caption span {
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+}
+
+@media (min-width: 640px) {
+  .frame {
+    flex-basis: 40vw;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rail {
+    overflow: visible;
+    scroll-snap-type: none;
+  }
+
+  .track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  .frame {
+    flex: none;
+    max-width: none;
+  }
+
+  .frame:nth-child(even) {
+    padding-top: var(--space-8);
+  }
+}

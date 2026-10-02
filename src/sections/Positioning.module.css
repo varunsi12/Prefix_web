@@ -1,0 +1,75 @@
+.section {
+  padding: var(--section-y) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* a single, very large, faint ring — the "room" the connection has */
+.section::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(140vw, 1500px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 1px solid rgba(205, 220, 255, 0.05);
+  pointer-events: none;
+}
+
+.inner {
+  display: grid;
+  gap: var(--space-5);
+  justify-items: center;
+  text-align: center;
+}
+
+.title {
+  max-width: 18ch;
+}
+
+.intents {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2) var(--space-5);
+  margin: var(--space-2) 0;
+}
+
+.intent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.9vw, 1.6rem);
+  color: var(--ink);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orbit-gold);
+  box-shadow: 0 0 12px rgba(244, 200, 106, 0.5);
+}
+
+.intent:nth-child(2) .dot {
+  background: var(--orbit-violet);
+  box-shadow: 0 0 12px rgba(142, 124, 247, 0.5);
+}
+
+.intent:nth-child(3) .dot {
+  background: var(--orbit-blue);
+  box-shadow: 0 0 12px rgba(106, 147, 255, 0.5);
+}
+
+.intent:nth-child(4) .dot {
+  background: var(--orbit-amber);
+  box-shadow: 0 0 12px rgba(240, 164, 95, 0.5);
+}
+
+.body {
+  text-align: center;
+  max-width: 34em;
+}

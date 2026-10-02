@@ -1,0 +1,79 @@
+/*
+  Pre:Fix design tokens.
+  Foundation: the app's deep navy. Cream text for warmth. The orbit colours from
+  the icon are used sparingly as accents and in the orbit artwork itself.
+*/
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #070a1c;
+  --bg-2: #0b1026;
+  --bg-3: #10163a;
+  --surface: rgba(255, 255, 255, 0.035);
+  --surface-2: rgba(255, 255, 255, 0.06);
+  --line: rgba(243, 237, 226, 0.1);
+  --line-strong: rgba(243, 237, 226, 0.2);
+
+  /* Type */
+  --ink: #f3ede2;
+  --ink-2: #c9ccdc;
+  --ink-3: #8f94ad;
+  --ink-inverse: #0b1026;
+
+  /* Brand accent (matches the app's sand buttons) */
+  --accent: #d8bf94;
+  --accent-2: #e9d3ac;
+  --accent-ink: #1a1540;
+
+  /* Orbit palette (from the icon) */
+  --orbit-gold: #f4c86a;
+  --orbit-amber: #f0a45f;
+  --orbit-blue: #6a93ff;
+  --orbit-violet: #8e7cf7;
+  --orbit-ice: #cddcff;
+
+  /* Typography */
+  --font-display: 'Lora Variable', 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-md: 1.125rem;
+  --text-lg: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+  --text-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.6rem);
+  --text-h2: clamp(1.9rem, 1.4rem + 2.2vw, 3.2rem);
+  --text-h1: clamp(2.5rem, 1.1rem + 3.3vw, 4.1rem);
+
+  /* Spacing + shape */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+  --space-9: 7rem;
+  --section-y: clamp(4.5rem, 4rem + 5vw, 9rem);
+
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  --container: 1200px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+
+  --nav-h: 72px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur: 320ms;
+  --dur-slow: 700ms;
+
+  --shadow-lg: 0 30px 80px -30px rgba(0, 0, 0, 0.7);
+  --focus-ring: 0 0 0 3px var(--bg), 0 0 0 5px var(--accent);
+}

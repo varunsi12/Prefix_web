@@ -1,0 +1,19 @@
+.heading {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 44rem;
+}
+
+.heading h2 {
+  max-width: 20ch;
+}
+
+.center {
+  margin-inline: auto;
+  text-align: center;
+  justify-items: center;
+}
+
+.center h2 {
+  max-width: 24ch;
+}

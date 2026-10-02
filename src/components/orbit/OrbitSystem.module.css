@@ -1,0 +1,31 @@
+.system {
+  display: block;
+  overflow: visible;
+}
+
+.ringSlow,
+.ringMid,
+.ringFast {
+  transform-origin: 100px 100px;
+  transform-box: view-box;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .system:not(.still) .ringSlow {
+    animation: spin 70s linear infinite;
+  }
+
+  .system:not(.still) .ringMid {
+    animation: spin 110s linear infinite reverse;
+  }
+
+  .system:not(.still) .ringFast {
+    animation: spin 150s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

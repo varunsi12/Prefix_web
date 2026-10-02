@@ -1,0 +1,15 @@
+# Cloudflare Pages response headers.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+
+# Hashed build assets are safe to cache forever.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Don't let the dynamic-route shell get cached as a page.
+/shell.html
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex

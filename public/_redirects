@@ -1,0 +1,6 @@
+# Cloudflare Pages routing.
+# Static routes (/, /privacy, /terms, /invite, 404) are real HTML files emitted at build.
+# Dynamic deep-link routes are client-rendered from an empty shell.
+/invite/*  /shell.html  200
+/event/*   /shell.html  200
+/venue/*   /shell.html  200

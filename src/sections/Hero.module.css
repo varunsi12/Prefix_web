@@ -1,0 +1,101 @@
+.hero {
+  position: relative;
+  /* nav is sticky and sits above; keep the hero a comfortable first screen */
+  min-height: calc(100svh - var(--nav-h));
+  display: flex;
+  align-items: center;
+  padding: var(--space-5) 0 var(--space-8);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* warm/cool ambient wash — no "startup gradient", just depth */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -20% -10% auto -10%;
+  height: 90%;
+  z-index: -1;
+  background:
+    radial-gradient(60% 50% at 78% 40%, rgba(106, 147, 255, 0.1), transparent 70%),
+    radial-gradient(45% 40% at 20% 20%, rgba(244, 200, 106, 0.06), transparent 70%);
+  pointer-events: none;
+}
+
+.grid {
+  display: grid;
+  gap: var(--space-6);
+  align-items: center;
+}
+
+.visual {
+  order: -1;
+  height: clamp(250px, 42svh, 360px);
+}
+
+.copy {
+  display: grid;
+  gap: var(--space-5);
+  justify-items: start;
+}
+
+.title {
+  max-width: 16ch;
+}
+
+/* Each sentence balances its own line breaks — avoids a one-word orphan. */
+.line {
+  display: block;
+  text-wrap: balance;
+}
+
+.lede {
+  max-width: 30em;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.arrow {
+  display: inline-block;
+  transition: transform var(--dur) var(--ease-out);
+}
+
+.actions a:hover .arrow {
+  transform: translateY(3px);
+}
+
+.note {
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+}
+
+@media (min-width: 820px) {
+  .hero {
+    padding: var(--space-6) 0 var(--space-9);
+  }
+
+  .grid {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: var(--space-7);
+  }
+
+  .visual {
+    order: 0;
+    height: clamp(420px, 60vh, 620px);
+  }
+
+  .title {
+    max-width: 18ch;
+  }
+}
+
+@media (min-width: 1100px) {
+  .grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+}

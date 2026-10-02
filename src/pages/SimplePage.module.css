@@ -1,0 +1,44 @@
+.wrap {
+  min-height: calc(100svh - var(--nav-h) - 240px);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: var(--space-5);
+  padding-top: var(--space-7);
+  padding-bottom: var(--section-y);
+  text-align: center;
+}
+
+.copy {
+  display: grid;
+  gap: var(--space-4);
+  justify-items: center;
+  max-width: 36rem;
+}
+
+.title {
+  font-size: var(--text-h2);
+}
+
+.body {
+  color: var(--ink-2);
+  font-size: var(--text-md);
+  display: grid;
+  gap: var(--space-3);
+}
+
+.body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--accent-2);
+  background: rgba(216, 191, 148, 0.12);
+  padding: 0.1em 0.45em;
+  border-radius: 6px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
