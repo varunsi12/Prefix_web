@@ -79,9 +79,14 @@ export function OrbitField() {
       };
     };
 
+    // Reduced motion: a single still composition that tells the whole story —
+    // two clearly overlapping worlds, glowing where they meet, both labelled.
     const renderStatic = () => {
       const g = geometry();
-      apply(g.dClose, 1, 1, 0, 0);
+      const d = 1.5 * g.R;
+      apply(d, smoothstep(g.dTouch, g.dClose, d), 1, 0, 0);
+      field.style.setProperty('--label-o', '1');
+      field.style.opacity = '1';
       field.classList.remove(styles.pre);
     };
 
