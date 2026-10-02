@@ -2,7 +2,7 @@
 
 The public landing page for **Pre:Fix**, the iOS app for finding something you want to do and people to do it with.
 
-Static site: **React 19 + Vite 7 + TypeScript**, prerendered to HTML at build time, deployed on **Cloudflare Pages** (free tier). No backend.
+Static site: **React 19 + Vite 7 + TypeScript**, prerendered to HTML at build time, deployed on **Cloudflare** (Workers static assets or Pages, free tier). No backend.
 
 ---
 
@@ -25,7 +25,7 @@ npm run dev          # http://localhost:5173
 
 ## Configuration
 
-Every URL or contact value that can change lives in **one place**: [`src/config/site.ts`](src/config/site.ts), fed by `VITE_*` environment variables. Copy [`.env.example`](.env.example) to `.env.local` for local work; in production set them under **Cloudflare Pages → Settings → Environment variables**.
+Every URL or contact value that can change lives in **one place**: [`src/config/site.ts`](src/config/site.ts), fed by `VITE_*` environment variables. Copy [`.env.example`](.env.example) to `.env.local` for local work; in production set them in the Cloudflare project’s **Build variables** (Workers) or **Environment variables** (Pages).
 
 | Variable               | Purpose                                                                                           | Default                  |
 | ---------------------- | ------------------------------------------------------------------------------------------------- | ------------------------ |
@@ -42,40 +42,50 @@ All values are public (they ship to the browser). **Never put secrets in `VITE_*
 
 ---
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
-**Build settings (copy these exactly):**
+The site is fully static (`dist/`), so it runs on either Cloudflare product. Both are free; pick one.
 
-| Setting                | Value           |
-| ---------------------- | --------------- |
-| Framework preset       | `None` (or `Vite`) |
-| Build command          | `npm run build` |
-| Build output directory | `dist`          |
-| Root directory         | `/`             |
-| Node version           | `22` (set env var `NODE_VERSION=22`) |
+| | **Workers** (what the dashboard offers by default) | **Pages** |
+| --- | --- | --- |
+| Where | *Workers & Pages → Create → Workers → Import a repository* | *Workers & Pages → Create → Pages → Connect to Git* |
+| Build command | `npm run build` | `npm run build` |
+| Deploy command | `npx wrangler deploy` (default) | — |
+| Output directory | read from [`wrangler.jsonc`](wrangler.jsonc) (`./dist`) | `dist` |
+| Node version | `22` via [`.nvmrc`](.nvmrc) | `22` via `.nvmrc` or env `NODE_VERSION=22` |
 
-Step by step:
+### Option A — Workers (recommended, matches the default "Set up your application" form)
 
-1. **Push to GitHub.** Create a repository and push this project (`main` branch).
-2. **Create the Pages project.** Cloudflare dashboard → *Workers & Pages* → *Create* → *Pages* → *Connect to Git*.
-3. **Connect the repository.** Authorize GitHub and select the repo. Production branch: `main`.
-4. **Framework / build settings.** Framework preset `None`; build command `npm run build`; output directory `dist`.
-5. **Build command** is `npm run build` — it type-checks, builds, prerenders every static route and writes `sitemap.xml` / `robots.txt`.
-6. **Output directory** is `dist`.
-7. **Environment variables.** Add `NODE_VERSION=22` plus the `VITE_*` values from the table above (at minimum `VITE_SITE_URL`). Set them for both *Production* and *Preview*. Click *Save and Deploy*.
-8. **Custom domain.** Pages project → *Custom domains* → *Set up a custom domain* → enter `joinprefix.com`, then repeat for `www.joinprefix.com`. The domain is registered with Cloudflare, so the DNS records are created automatically — just confirm the prompt.
-9. **www → apex redirect.** Both hostnames serve the site; to keep one canonical origin, add a redirect: zone `joinprefix.com` → *Rules* → *Redirect Rules* → *Create rule* → "Redirect from WWW to Root" template (free). `VITE_SITE_URL` must match the apex (`https://joinprefix.com`).
-10. **Verify HTTPS.** Cloudflare issues a certificate automatically; the domain shows *Active* once DNS propagates (usually minutes). Load `https://joinprefix.com` and confirm the lock icon, then check `/sitemap.xml` and `/robots.txt` show `https://joinprefix.com`.
-11. **Future updates.** Every push to `main` triggers a production deploy; every pull request gets a preview URL. No manual steps.
+1. **Push to GitHub** (`main` branch).
+2. Cloudflare dashboard → **Workers & Pages → Create → Workers → Import a repository** → pick `Prefix_web`.
+3. On *Set up your application* leave the defaults: project name `prefix-web`, build command `npm run build`, deploy command `npx wrangler deploy`. **Enable Preview builds** can stay on (every PR gets a preview URL).
+4. Open **Advanced settings → Build variables** and add any `VITE_*` values from the table above (none are required; `VITE_SITE_URL` already defaults to `https://joinprefix.com`).
+5. Click **Deploy**. The first build takes ~1–2 minutes and the site is live at `prefix-web.<account>.workers.dev`.
+6. **Custom domain.** Worker → **Settings → Domains & Routes → + Add → Custom domain** → `joinprefix.com`. Repeat for `www.joinprefix.com`. The domain is registered with Cloudflare, so DNS and the certificate are set up automatically.
+7. **www → apex redirect.** Zone `joinprefix.com` → **Rules → Redirect Rules → Create rule** → template *"Redirect from WWW to Root"* (free). `VITE_SITE_URL` must match the apex (`https://joinprefix.com`).
+8. **Verify.** Load `https://joinprefix.com`, then check `/privacy`, `/terms`, `/sitemap.xml`, `/robots.txt`, and that a bogus URL returns a styled 404.
+9. **Future updates.** Every push to `main` deploys to production; every pull request gets a preview URL.
+
+### Option B — Pages
+
+1. **Push to GitHub** (`main` branch).
+2. **Workers & Pages → Create → Pages → Connect to Git** → select the repo. Production branch `main`.
+3. Framework preset `None`; **build command `npm run build`**; **build output directory `dist`**; root directory `/`.
+4. **Environment variables.** Add `NODE_VERSION=22` plus any `VITE_*` values, for both *Production* and *Preview*. **Save and Deploy**.
+5. **Custom domain.** Pages project → **Custom domains → Set up a custom domain** → `joinprefix.com`, then `www.joinprefix.com`.
+6. Steps 7–9 from Option A apply unchanged.
 
 Nothing here requires a paid Cloudflare feature.
 
 ### Routing on Cloudflare
 
-- `/`, `/privacy`, `/terms`, `/invite` are real HTML files (prerendered). Cloudflare serves `privacy/index.html` at `/privacy` automatically.
-- `404.html` is served with a **real 404 status** for unknown URLs.
-- `/invite/:code`, `/event/:id`, `/venue/:id` are rewritten to an empty app shell by [`public/_redirects`](public/_redirects) and rendered client-side.
+Behaviour is identical on Workers and Pages:
+
+- `/`, `/privacy`, `/terms`, `/invite` are real HTML files (prerendered). `privacy/index.html` is served at `/privacy`; `/privacy/` redirects to `/privacy`.
+- `404.html` is served with a **real 404 status** for unknown URLs (`not_found_handling: "404-page"` in `wrangler.jsonc`; automatic on Pages).
+- `/invite/:code`, `/event/:id`, `/venue/:id` are rewritten (200) to the empty app shell by [`public/_redirects`](public/_redirects) and rendered client-side.
 - Security and caching headers live in [`public/_headers`](public/_headers).
+- `npm run preview` reproduces this routing locally; `npx wrangler dev` runs the real Workers runtime against `dist/`.
 
 ---
 

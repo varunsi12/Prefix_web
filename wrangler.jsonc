@@ -1,0 +1,15 @@
+// Cloudflare Workers (static assets) configuration.
+// Used by `npx wrangler deploy` in Cloudflare's "Workers & Pages → Create → Workers → Import a repository" flow.
+// The site is 100% static, so there is no Worker script — Cloudflare serves ./dist directly.
+// `public/_headers` and `public/_redirects` are honored exactly as they are on Cloudflare Pages.
+{
+  "name": "prefix-web",
+  "compatibility_date": "2026-10-02",
+  "assets": {
+    "directory": "./dist",
+    // Serve dist/404.html with a real 404 status for unknown paths.
+    "not_found_handling": "404-page",
+    // /privacy  → dist/privacy/index.html, and /privacy/ redirects to /privacy (clean URLs, matching the sitemap).
+    "html_handling": "drop-trailing-slash"
+  }
+}

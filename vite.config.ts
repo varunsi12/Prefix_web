@@ -23,7 +23,7 @@ export default defineConfig({
 });
 
 /**
- * Makes `vite preview` behave like Cloudflare Pages so the production build can
+ * Makes `vite preview` behave like Cloudflare (Workers/Pages) so the production build can
  * be checked locally: clean URLs (/privacy → privacy/index.html), `_redirects`
  * rewrites, and `404.html` with a real 404 status. Dev server is unaffected.
  */
@@ -61,7 +61,8 @@ function cloudflarePagesPreview(): Plugin {
         for (const r of rules) {
           if (!matches(r.from, p)) continue;
           if (r.status === 200) {
-            req.url = r.to;
+            // Rewrite target may be extensionless (e.g. "/shell" → shell.html), as on Cloudflare.
+            req.url = isFile(path.join(dist, r.to)) ? r.to : `${r.to}.html`;
             return next();
           }
           res.statusCode = r.status;
