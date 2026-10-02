@@ -23,6 +23,11 @@
   .row > * {
     width: 100%;
   }
+
+  /* In a column, flex-basis governs height — reset it so the input keeps its 48px. */
+  .row .input {
+    flex: 0 0 auto;
+  }
 }
 
 .input {

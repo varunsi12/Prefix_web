@@ -4,6 +4,7 @@ import { Privacy } from './pages/Privacy';
 import { Terms } from './pages/Terms';
 import { NotFound } from './pages/NotFound';
 import { EventOrVenue, Invite } from './pages/DeepLink';
+import { ScrollManager } from './components/ScrollManager';
 
 /**
  * Route table. Static routes are prerendered to HTML at build time
@@ -11,17 +12,20 @@ import { EventOrVenue, Invite } from './pages/DeepLink';
  */
 export function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/privacy" element={<Privacy />} />
-      <Route path="/terms" element={<Terms />} />
+    <>
+      <ScrollManager />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
 
-      {/* Future deep links (app Universal Links will target these paths). */}
-      <Route path="/invite/:code?" element={<Invite />} />
-      <Route path="/event/:id" element={<EventOrVenue kind="event" />} />
-      <Route path="/venue/:id" element={<EventOrVenue kind="venue" />} />
+        {/* Future deep links (app Universal Links will target these paths). */}
+        <Route path="/invite/:code?" element={<Invite />} />
+        <Route path="/event/:id" element={<EventOrVenue kind="event" />} />
+        <Route path="/venue/:id" element={<EventOrVenue kind="venue" />} />
 
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

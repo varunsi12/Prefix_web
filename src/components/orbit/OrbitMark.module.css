@@ -85,6 +85,24 @@
   transform: scale(1);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  /* After the join settles, the glow breathes slowly so the mark never looks frozen. */
+  .joined .glow {
+    animation: breathe 5s ease-in-out 1900ms infinite alternate;
+  }
+}
+
+@keyframes breathe {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.78;
+    transform: scale(1.09);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   /* Render the connected state immediately. */
   .system,

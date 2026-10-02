@@ -11,16 +11,17 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Slow enough to feel ambient, fast enough that the gradient sweep is visible. */
   .system:not(.still) .ringSlow {
-    animation: spin 70s linear infinite;
+    animation: spin 32s linear infinite;
   }
 
   .system:not(.still) .ringMid {
-    animation: spin 110s linear infinite reverse;
+    animation: spin 50s linear infinite reverse;
   }
 
   .system:not(.still) .ringFast {
-    animation: spin 150s linear infinite;
+    animation: spin 72s linear infinite;
   }
 }
 

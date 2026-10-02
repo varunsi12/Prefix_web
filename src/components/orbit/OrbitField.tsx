@@ -64,16 +64,18 @@ export function OrbitField() {
       const S = left.offsetWidth;
       const R = S * ORBIT_OUTER_RATIO;
       const W = field.clientWidth;
-      // On narrow screens the artwork sits above the headline and leaves the
-      // viewport quickly, so the entrance alone tells the whole story
-      // (apart → connected). On wide screens the entrance stops at "touching"
-      // and the first bit of scroll completes the connection.
+      // The entrance brings the orbits to the point of touching/overlapping; the
+      // first stretch of scroll completes the connection. Phones have less
+      // scroll room before the artwork leaves the viewport, so the entrance
+      // goes a little further and the scroll span is shorter.
       const narrow = window.innerWidth < 820;
       return {
+        R,
         dFar: Math.max(Math.min(3.4 * R, W - 2.3 * R), 2.0 * R),
         dTouch: 1.96 * R,
-        dEntryEnd: narrow ? 1.3 * R : 1.74 * R,
+        dEntryEnd: narrow ? 1.62 * R : 1.74 * R,
         dClose: 1.3 * R,
+        scrollSpan: window.innerHeight * (narrow ? 0.22 : 0.3),
       };
     };
 
@@ -91,10 +93,15 @@ export function OrbitField() {
       const e = easeOutCubic(clamp((now - start - ENTRY_DELAY) / ENTRY_MS, 0, 1));
       const d1 = lerp(g.dFar, g.dEntryEnd, e);
 
-      // Connection completes within the first ~30% of a viewport of scrolling,
-      // while the rings are still comfortably on screen.
-      const s = smoothstep(0, 1, clamp(window.scrollY / (window.innerHeight * 0.3), 0, 1));
-      const d = lerp(d1, g.dClose, s);
+      // Connection completes within the first fraction of a viewport of
+      // scrolling, while the rings are still comfortably on screen.
+      const s = smoothstep(0, 1, clamp(window.scrollY / g.scrollSpan, 0, 1));
+
+      // Once settled, a slow breath (±3.5% of a radius, ~12 s period) keeps the
+      // artwork alive on touch devices, where there is no pointer parallax.
+      // It also modulates the overlap glow via `o` below.
+      const breath = Math.sin((now - start) / 1900) * 0.035 * g.R * e;
+      const d = lerp(d1, g.dClose, s) + breath;
 
       const o = smoothstep(g.dTouch, g.dClose, d);
 
