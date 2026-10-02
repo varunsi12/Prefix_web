@@ -165,7 +165,7 @@ The invite UI is controlled entirely by `VITE_INVITE_ENABLED`. Setting it to `fa
 
 ## Legal pages
 
-`/privacy` and `/terms` are **structural placeholders** marked "Draft — pending legal review". Replace each `[TODO]` in `src/pages/Privacy.tsx` and `src/pages/Terms.tsx` with reviewed text before launch.
+`/privacy` and `/terms` contain the Prefix Privacy Policy and Terms of Service (effective October 2, 2026). The text lives as plain JSX in `src/pages/Privacy.tsx` and `src/pages/Terms.tsx`; edit there and update the `effective` date prop when the documents change. The closing "Contact" section automatically appends `VITE_CONTACT_EMAIL` when it is set.
 
 ---
 
