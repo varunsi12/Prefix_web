@@ -164,11 +164,11 @@ export function OrbitField() {
 
       <div ref={leftRef} className={`${styles.system} ${styles.left}`}>
         <OrbitSystem tone="warm" size="100%" />
-        <span className={styles.label}>You</span>
+        <span className={styles.label}>Your World</span>
       </div>
       <div ref={rightRef} className={`${styles.system} ${styles.right}`}>
         <OrbitSystem tone="cool" size="100%" />
-        <span className={styles.label}>Someone else</span>
+        <span className={styles.label}>Their World</span>
       </div>
     </div>
   );
