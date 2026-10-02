@@ -29,7 +29,7 @@ Every URL or contact value that can change lives in **one place**: [`src/config/
 
 | Variable               | Purpose                                                                                           | Default                  |
 | ---------------------- | ------------------------------------------------------------------------------------------------- | ------------------------ |
-| `VITE_SITE_URL`        | Canonical origin (no trailing slash). Used for `<link rel=canonical>`, OG URLs, sitemap, robots.  | `https://www.example.com`|
+| `VITE_SITE_URL`        | Canonical origin (no trailing slash). Used for `<link rel=canonical>`, OG URLs, sitemap, robots.  | `https://joinprefix.com` |
 | `VITE_APP_STORE_URL`   | App Store listing. **Every "Get Pre:Fix" button uses this.** While empty, CTAs link to `#get-prefix` and the on-page button shows "Coming soon to the App Store". | _(empty)_ |
 | `VITE_APP_URL_SCHEME`  | Deep-link scheme / Universal Link base for `/event/:id`, `/venue/:id`, `/invite/:code` (e.g. `prefix://`). | _(empty)_ |
 | `VITE_INSTAGRAM_URL`   | Footer link. Hidden while empty.                                                                  | _(empty)_                |
@@ -63,9 +63,9 @@ Step by step:
 5. **Build command** is `npm run build` — it type-checks, builds, prerenders every static route and writes `sitemap.xml` / `robots.txt`.
 6. **Output directory** is `dist`.
 7. **Environment variables.** Add `NODE_VERSION=22` plus the `VITE_*` values from the table above (at minimum `VITE_SITE_URL`). Set them for both *Production* and *Preview*. Click *Save and Deploy*.
-8. **Custom domain.** Pages project → *Custom domains* → *Set up a custom domain* → enter e.g. `www.yourdomain.com` (and the apex). If the domain's DNS is on Cloudflare, records are created automatically.
-9. **DNS.** If DNS is elsewhere, add a `CNAME` for `www` → `<project>.pages.dev`. For the apex, either move DNS to Cloudflare (recommended; CNAME flattening) or redirect apex → `www` at your registrar.
-10. **Verify HTTPS.** Cloudflare issues a certificate automatically; the domain shows *Active* once DNS propagates (usually minutes). Load `https://www.yourdomain.com` and confirm the lock icon, then check `/sitemap.xml` and `/robots.txt` show the right origin.
+8. **Custom domain.** Pages project → *Custom domains* → *Set up a custom domain* → enter `joinprefix.com`, then repeat for `www.joinprefix.com`. The domain is registered with Cloudflare, so the DNS records are created automatically — just confirm the prompt.
+9. **www → apex redirect.** Both hostnames serve the site; to keep one canonical origin, add a redirect: zone `joinprefix.com` → *Rules* → *Redirect Rules* → *Create rule* → "Redirect from WWW to Root" template (free). `VITE_SITE_URL` must match the apex (`https://joinprefix.com`).
+10. **Verify HTTPS.** Cloudflare issues a certificate automatically; the domain shows *Active* once DNS propagates (usually minutes). Load `https://joinprefix.com` and confirm the lock icon, then check `/sitemap.xml` and `/robots.txt` show `https://joinprefix.com`.
 11. **Future updates.** Every push to `main` triggers a production deploy; every pull request gets a preview URL. No manual steps.
 
 Nothing here requires a paid Cloudflare feature.

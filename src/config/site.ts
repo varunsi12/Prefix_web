@@ -26,7 +26,7 @@ export const site = {
    * Canonical origin, no trailing slash. Used for <link rel="canonical">,
    * Open Graph URLs, sitemap.xml and robots.txt.
    */
-  url: (optional(env.VITE_SITE_URL) ?? 'https://www.example.com').replace(/\/$/, ''),
+  url: (optional(env.VITE_SITE_URL) ?? 'https://joinprefix.com').replace(/\/$/, ''),
 
   /**
    * App Store URL. Leave unset until the app is live; while unset, every
