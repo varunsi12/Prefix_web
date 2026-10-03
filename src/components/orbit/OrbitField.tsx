@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { OrbitSystem, ORBIT_OUTER_RATIO } from './OrbitSystem';
 import { clamp, easeOutCubic, lerp, prefersReducedMotion, smoothstep } from '../../lib/motion';
-import { createOrbitDebug } from './orbitDebug';
 import styles from './OrbitField.module.css';
 
 /**
@@ -27,16 +26,10 @@ export function OrbitField() {
     const glow = glowRef.current;
     if (!field || !left || !right || !glow) return;
 
-    const dbg = createOrbitDebug();
-    dbg.log('effect initialized');
-    dbg.log('reduced motion:', prefersReducedMotion());
-
     let raf = 0;
     let visible = true; // IntersectionObserver-reported; assume on screen until told otherwise
     let start = 0; // entry clock — stamped by the first frame drawn while the page is visible
     let entryDone = false;
-    let frames = 0;
-    let lastStats = 0;
     const ENTRY_DELAY = 350;
     const ENTRY_MS = 2600;
 
@@ -90,7 +83,6 @@ export function OrbitField() {
     // Reduced motion: a single still composition that tells the whole story —
     // two clearly overlapping worlds, glowing where they meet, both labelled.
     const renderStatic = () => {
-      dbg.log('renderStatic (reduced motion)');
       const g = geometry();
       const d = 1.5 * g.R;
       apply(d, smoothstep(g.dTouch, g.dClose, d), 1, 0, 0);
@@ -108,17 +100,11 @@ export function OrbitField() {
         raf = requestAnimationFrame(frame);
         return;
       }
-      if (!start) {
-        start = now;
-        dbg.log('first frame', { S: left.offsetWidth, W: field.clientWidth, inner: `${innerWidth}x${innerHeight}`, scrollY });
-      }
+      if (!start) start = now;
       const g = geometry();
 
       const e = easeOutCubic(clamp((now - start - ENTRY_DELAY) / ENTRY_MS, 0, 1));
-      if (e >= 1 && !entryDone) {
-        entryDone = true;
-        dbg.log('entry complete');
-      }
+      if (e >= 1) entryDone = true;
       const d1 = lerp(g.dFar, g.dEntryEnd, e);
 
       // Connection completes within the first fraction of a viewport of
@@ -143,17 +129,6 @@ export function OrbitField() {
       field.style.opacity = String(1 - clamp(window.scrollY / (window.innerHeight * 1.1), 0, 1) * 0.75);
       if (field.classList.contains(styles.pre)) field.classList.remove(styles.pre);
 
-      if (dbg.enabled) {
-        frames++;
-        if (now - lastStats > 500) {
-          lastStats = now;
-          dbg.stats(
-            `frames=${frames} e=${e.toFixed(2)} s=${s.toFixed(2)} d/R=${(d / g.R).toFixed(2)} o=${o.toFixed(2)} ` +
-              `scrollY=${Math.round(scrollY)} inner=${innerWidth}x${innerHeight} vis=${document.visibilityState}`,
-          );
-        }
-      }
-
       raf = requestAnimationFrame(frame);
     };
 
@@ -163,9 +138,8 @@ export function OrbitField() {
       if (raf) cancelAnimationFrame(raf);
       raf = 0;
     };
-    const run = (reason: string) => {
+    const run = () => {
       stop();
-      dbg.log('run', reason);
       if (prefersReducedMotion()) {
         renderStatic();
         return;
@@ -177,10 +151,9 @@ export function OrbitField() {
     // pauses/resumes the loop as the artwork leaves/re-enters the viewport.
     const io = new IntersectionObserver(
       ([entry]) => {
-        dbg.log('IO:', { isIntersecting: entry.isIntersecting, ratio: +entry.intersectionRatio.toFixed(2), top: Math.round(entry.boundingClientRect.top) });
         visible = entry.isIntersecting;
         if (visible) {
-          if (!raf) run('io-visible');
+          if (!raf) run();
         } else {
           stop();
         }
@@ -188,32 +161,29 @@ export function OrbitField() {
       { threshold: 0 },
     );
     io.observe(field);
-    dbg.log('IO registered');
-    run('init');
+    run();
 
     // Reduced-motion changes. Older WebKit only has addListener/removeListener.
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const onMotionChange = () => run('motion-change');
+    const onMotionChange = () => run();
     if (typeof mq.addEventListener === 'function') mq.addEventListener('change', onMotionChange);
     else mq.addListener(onMotionChange);
 
     // Backgrounding: stop while hidden; resume (once) when shown. If the
     // entrance hadn't finished, replay it so it is actually seen.
     const onVisibility = () => {
-      dbg.log('visibilitychange', document.visibilityState);
       if (document.visibilityState !== 'visible') {
         stop();
         if (!entryDone) start = 0;
         return;
       }
-      if (visible) run('visible-again');
+      if (visible) run();
     };
     document.addEventListener('visibilitychange', onVisibility);
 
     // bfcache restore (Safari back/forward) does not re-run effects; resume explicitly.
     const onPageShow = (ev: PageTransitionEvent) => {
-      dbg.log('pageshow', { persisted: ev.persisted });
-      if (ev.persisted && visible) run('pageshow');
+      if (ev.persisted && visible) run();
     };
     window.addEventListener('pageshow', onPageShow);
 
