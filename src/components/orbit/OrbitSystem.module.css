@@ -6,8 +6,11 @@
 .ringSlow,
 .ringMid,
 .ringFast {
-  transform-origin: 100px 100px;
-  transform-box: view-box;
+  /* Each ring is a circle centred in the viewBox, so its own box (fill-box) and
+     the viewBox have the same centre. `center` therefore resolves to the right
+     point whichever transform-box an engine applies. */
+  transform-box: fill-box;
+  transform-origin: center;
 }
 
 @media (prefers-reduced-motion: no-preference) {
